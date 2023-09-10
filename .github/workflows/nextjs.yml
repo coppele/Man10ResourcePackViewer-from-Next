@@ -81,6 +81,9 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           path: ./out
+    environment: github-pages
+    env:
+      BRANCH_NAME: ${{ vars.BRANCH_NAME }}
 
   # Deployment job
   deploy:
