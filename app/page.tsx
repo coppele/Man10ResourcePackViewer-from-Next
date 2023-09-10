@@ -1,113 +1,112 @@
-import Image from 'next/image'
+"use client"
 
-export default function Home() {
+import * as THREE from 'three';
+import { MinecraftModelLoader, MinecraftTexture, MinecraftTextureLoader } from '@fanthstudios/three-mcmodel';
+import React, { FormEventHandler } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Stats } from '@react-three/drei';
+
+const modelsPath = 'Man10ResourcePack/assets/minecraft/models';
+const rawPath = 'https://raw.githubusercontent.com/takatronix/Man10ResourcePack/master/assets/minecraft';
+
+const modelLoader = new MinecraftModelLoader();
+const textureLoader = new MinecraftTextureLoader();
+
+function AxesHelper(props: {visiable: boolean}) {
+  const ref = React.useRef<THREE.AxesHelper>(null);
+  React.useEffect(() => {
+    ref.current?.setColors(new THREE.Color('red'), new THREE.Color('lime'), new THREE.Color('blue'))
+  }, [])
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <axesHelper ref={ref} args={[8]} position={[0, 1e-2, 0]} visible={props.visiable}/>
   )
 }
+
+function Model(props: {src: string}) {
+  const group = React.useRef<THREE.Group>(null);
+  const [failLoad, setFailLoad] = React.useState<boolean>(false);
+  
+  React.useEffect(() => {
+    const boundingBox = new THREE.Box3();
+    group.current?.clear()
+    setFailLoad(true);
+    if (props.src) modelLoader.loadAsync(`${rawPath}/models/${props.src}.json`).then(model => {
+      model.resolveTextures(path => textureLoader.loadAsync(`${rawPath}/textures/${path}.png`));
+      
+      boundingBox.setFromObject(model);
+      model.position.y = boundingBox.getSize(new THREE.Vector3()).y / 2;
+
+      group.current?.add(model);
+      setFailLoad(false);
+    });
+  }, [ props.src ]);
+
+  return (
+    <>
+      <group ref={group}/>
+      <mesh visible={failLoad}>
+        <boxGeometry args={[10, 10, 10]}/>
+        <meshBasicMaterial map={new MinecraftTexture()}/>
+      </mesh>
+    </>
+  );
+}
+
+function Home() {
+  const [girdVisiable, setGridVisiable] = React.useState<boolean>(true);
+  const [location, setLocation] = React.useState<string>('man10/vehicle/f12');
+  const [rotateSpeed, setRotateSpeed] = React.useState<number>(2);
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = event => {
+    event.preventDefault();
+    
+    if (event.target instanceof HTMLFormElement) {
+      const { value: location } = event.target.location;
+      setLocation(location);
+    }
+  };
+
+  return (
+    <>
+      <form className="z-10 fixed left-0 top-0 flex flex-col w-full items-center gap-2 border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:text-gray-400 dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit dark:bg-zinc-800/30" onSubmit={handleSubmit}>
+        <p>
+          入力したモデルを&nbsp;
+          <a className='text-sky-400 hover:underline' href={`${modelsPath}/man10`}>Man10ResourcePack</a>
+          &nbsp;から読み込みます
+        </p>
+        <p className='flex flex-nowrap items-center border-b'>
+          <span>{modelsPath}/</span>
+          <input className=' dark:text-white overflow-visiable min-w-80 outline-0 bg-transparent' type='text' name='location' list='models' placeholder='man10/...'/>
+          <span>.json&nbsp;</span>
+        </p>
+        <p className='text-xs'>
+          ※parent(2d系など)、バニラテクスチャを用いているモデルは例の市松模様が表示されたりします。
+        </p>
+        <label className='cursor-pointer select-none text-xs underline'>
+          <input className='hidden' type='checkbox' onInput={event => setGridVisiable(!(event.target as HTMLInputElement).checked)}/>
+          クリックするとグリッドが{girdVisiable ? '非表示になり' : '表示され'}ます。
+        </label>
+      </form>
+      <Canvas className='bg-gray-900' style={{ height: '100vh' }} linear flat gl={{ logarithmicDepthBuffer: true }} camera={{ position: [-25, 25, -25] }} onPointerEnter={() => setRotateSpeed(0)} onPointerLeave={() => setRotateSpeed(2)}>
+        <Model src={location}/>
+        <AxesHelper visiable={girdVisiable}/>
+        <gridHelper args={[16, 16, 'gray', 'gray']} visible={girdVisiable}/>
+        <gridHelper args={[48, 3, 'gray', 'gray']} visible={girdVisiable}/>
+        <pointLight position={[50, 50, 50]} intensity={100} />
+        <OrbitControls autoRotate autoRotateSpeed={rotateSpeed}/>
+        <Stats />
+      </Canvas>
+      <datalist id='models'>
+        <option value={'man10/hat/loser_hat'} />
+        <option value={'man10/hat/police_hat'} />
+        <option value={'man10/vehicle/chiron'} />
+        <option value={'man10/vehicle/retro_car'} />
+        <option value={'man10/weapon/magic/curtain_call_0stack'} />
+        <option value={'man10/weapon/gun/rpg7'} />
+        <option value={'man10/weapon/gun/water_barrage'} /> 
+      </datalist>
+    </>
+  );
+}
+
+export default Home;
